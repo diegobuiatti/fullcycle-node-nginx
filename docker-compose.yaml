@@ -3,9 +3,7 @@ version: '3'
 services:
 
   app:
-    build:
-      context: node
-    image: diegorikhy/node
+    image: diegorikhy/node:latest
     container_name: app
     entrypoint: dockerize -wait tcp://db:3306 -timeout 20s docker-entrypoint.sh
     command: bash -c "npm install && npm start"
@@ -33,10 +31,10 @@ services:
       - node-network
 
   nginx:
-    build:
-      context: nginx
-    image: diegorikhy/nginx
+    image: diegorikhy/nginx:latest
     container_name: nginx
+    entrypoint: dockerize -wait tcp://app:3000 -timeout 30s
+    command: ["nginx", "-g", "daemon off;"]
     networks:
       - node-network
     ports:
